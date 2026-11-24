@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Master Mind – a logic game in the browser. Crack the hidden color code.">
+  <title>Master Mind 🧠</title>
+
+  <link rel="icon" type="image/png" href="icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+
+  <!-- ========== NAVBAR ========== -->
+  <header class="navbar">
+    <div class="navbar__inner">
+      <a class="navbar__logo" href="./">
+        <span class="navbar__logo-icon" aria-hidden="true">🧠</span>
+        <span class="navbar__logo-text">Master Mind</span>
+      </a>
+      <button class="btn btn--primary" type="button" data-action="new-game">New game</button>
+    </div>
+  </header>
+
+  <!-- ========== GAME ========== -->
+  <main class="game">
+
+      <!-- ===== PLAYER 1 ===== -->
+      <aside class="player player--left is-active" data-player="1">
+        <div class="player__avatar">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm0 2c-4.42 0-8 2.24-8 5v1a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-1c0-2.76-3.58-5-8-5Z"/>
+          </svg>
+        </div>
+        <div class="player__info">
+          <p class="player__name">Player 1</p>
+          <p class="player__role">Codebreaker</p>
+          <p class="player__score">Wins: <span class="player__score-value">0</span></p>
+        </div>
+      </aside>
+
+    <!-- ===== CENTER: board + palette + controls ===== -->
+    <div class="game__center">
+
+      <section class="board" aria-label="Game board">
+
+        <!-- Secret code (JS sets data-color on slots to reveal it) -->
+        <div class="board__secret secret" aria-label="Secret code">
+          <span class="secret__icon" aria-hidden="true">🔒</span>
+          <div class="secret__slots">
+            <span class="secret__slot"></span>
+            <span class="secret__slot"></span>
+            <span class="secret__slot"></span>
+            <span class="secret__slot"></span>
+          </div>
+        </div>
+
+        <!-- Guess rows: row 1 is at the bottom (column-reverse in CSS) -->
+        <ol class="board__rows">
+            <li class="row is-active" data-row="1">
+              <span class="row__number">1</span>
+              <div class="row__holes">
+                <button class="hole" type="button" aria-label="Row 1, slot 1"></button>
+                <button class="hole" type="button" aria-label="Row 1, slot 2"></button>
+                <button class="hole" type="button" aria-label="Row 1, slot 3"></button>
+                <button class="hole" type="button" aria-label="Row 1, slot 4"></button>
+              </div>
+              <div class="row__feedback feedback" aria-label="Feedback for row 1">
+                <span class="feedback__key"></span>
+                <span class="feedback__key"></span>
+                <span class="feedback__key"></span>
+                <span class="feedback__key"></span>
+              </div>
+            </li>
+
+            <li class="row" data-row="2">
+              <span class="row__number">2</span>
+              <div class="row__holes">
+                <button class="hole" type="button" aria-label="Row 2, slot 1" disabled></button>
+                <button class="hole" type="button" aria-label="Row 2, slot 2" disabled></button>
+                <button class="hole" type="button" aria-label="Row 2, slot 3" disabled></button>
+                <button class="hole" type="button" aria-label="Row 2, slot 4" disabled></button>
+              </div>
+              <div class="row__feedback feedback" aria-label="Feedback for row 2">
+                <span class="feedback__key"></span>
+                <span class="feedback__key"></span>
+                <span class="feedback__key"></span>
+                <span class="feedback__key"></span>
+              </div>
+            </li>
+
+            <li class="row" data-row="3">
+              <span class="row__number">3</span>
+              <div class="row__holes">
+                <button class="hole" type="button" aria-label="Row 3, slot 1" disabled></button>
+                <button class="hole" type="button" aria-label="Row 3, slot 2" disabled></button>
+                <button class="hole" type="button" aria-label="Row 3, slot 3" disabled></button>
+                <button class="hole" type="button" aria-label="Row 3, slot 4" disabled></button>
+              </div>
+              <div class="row__feedback feedback" aria-label="Feedback for row 3">
+                <span class="feedback__key"></span>
+                <span class="feedback__key"></span>
+                <span class="feedback__key"></span>
+                <span class="feedback__key"></span>
+              </div>
+            </li>
+
+            <li class="row" data-row="4">
+              <span class="row__number">4</span>
+              <div class="row__holes">
+                <button class="hole" type="button" aria-label="Row 4, slot 1" disabled></button>
+                <button class="hole" type="button" aria-label="Row 4, slot 2" disabled></button>
+                <button class="hole" type="button" aria-label="Row 4, slot 3" disabled></button>
+                <button class="hole" type="button" aria-label="Row 4, slot 4" disabled></button>
+              </div>
+              <div class="row__feedback feedback" aria-label="Feedback for row 4">
+                <span class="feedback__key"></span>
+                <span class="feedback__key"></span>
+                <span class="feedback__key"></span>
+                <span class="feedback__key"></span>
+              </div>
+            </li>
+
+            <li class="row" data-row="5">
+              <span class="row__number">5</span>
+              <div class="row__holes">
+                <button class="hole" type="button" aria-label="Row 5, slot 1" disabled></button>
+                <button class="hole" type="button" aria-label="Row 5, slot 2" disabled></button>
+                <button class="hole" type="button" aria-label="Row 5, slot 3" disabled></button>
+                <button class="hole" type="button" aria-label="Row 5, slot 4" disabled></button>
+              </div>
+              <div class="row__feedback feedback" aria-label="Feedback for row 5">
+                <span class="feedback__key"></span>
+                <span class="feedback__key"></span>
+                <span class="feedback__key"></span>
+                <span class="feedback__key"></span>
+              </div>
+            </li>
+
+            <li class="row" data-row="6">
+              <span class="row__number">6</span>
+              <div class="row__holes">
+                <button class="hole" type="button" aria-label="Row 6, slot 1" disabled></button>
+                <button class="hole" type="button" aria-label="Row 6, slot 2" disabled></button>
+                <button class="hole" type="button" aria-label="Row 6, slot 3" disabled></button>
+                <button class="hole" type="button" aria-label="Row 6, slot 4" disabled></button>
+              </div>
+              <div class="row__feedback feedback" aria-label="Feedback for row 6">
+                <span class="feedback__key"></span>
+                <span class="feedback__key"></span>
+                <span class="feedback__key"></span>
+                <span class="feedback__key"></span>
+              </div>
+            </li>
+
+            <li class="row" data-row="7">
+              <span class="row__number">7</span>
+              <div class="row__holes">
+                <button class="hole" type="button" aria-label="Row 7, slot 1" disabled></button>
+                <button class="hole" type="button" aria-label="Row 7, slot 2" disabled></button>
+                <button class="hole" type="button" aria-label="Row 7, slot 3" disabled></button>
+                <button class="hole" type="button" aria-label="Row 7, slot 4" disabled></button>
+              </div>
+              <div class="row__feedback feedback" aria-label="Feedback for row 7">
+                <span class="feedback__key"></span>
+                <span class="feedback__key"></span>
+                <span class="feedback__key"></span>
+                <span class="feedback__key"></span>
+              </div>
+            </li>
+
+            <li class="row" data-row="8">
+              <span class="row__number">8</span>
+              <div class="row__holes">
+                <button class="hole" type="button" aria-label="Row 8, slot 1" disabled></button>
+                <button class="hole" type="button" aria-label="Row 8, slot 2" disabled></button>
+                <button class="hole" type="button" aria-label="Row 8, slot 3" disabled></button>
+                <button class="hole" type="button" aria-label="Row 8, slot 4" disabled></button>
+              </div>
+              <div class="row__feedback feedback" aria-label="Feedback for row 8">
+                <span class="feedback__key"></span>
+                <span class="feedback__key"></span>
+                <span class="feedback__key"></span>
+                <span class="feedback__key"></span>
+              </div>
+            </li>
+
+            <li class="row" data-row="9">
+              <span class="row__number">9</span>
+              <div class="row__holes">
+                <button class="hole" type="button" aria-label="Row 9, slot 1" disabled></button>
+                <button class="hole" type="button" aria-label="Row 9, slot 2" disabled></button>
+                <button class="hole" type="button" aria-label="Row 9, slot 3" disabled></button>
+                <button class="hole" type="button" aria-label="Row 9, slot 4" disabled></button>
+              </div>
+              <div class="row__feedback feedback" aria-label="Feedback for row 9">
+                <span class="feedback__key"></span>
+                <span class="feedback__key"></span>
+                <span class="feedback__key"></span>
+                <span class="feedback__key"></span>
+              </div>
+            </li>
+
+            <li class="row" data-row="10">
+              <span class="row__number">10</span>
+              <div class="row__holes">
+                <button class="hole" type="button" aria-label="Row 10, slot 1" disabled></button>
+                <button class="hole" type="button" aria-label="Row 10, slot 2" disabled></button>
+                <button class="hole" type="button" aria-label="Row 10, slot 3" disabled></button>
+                <button class="hole" type="button" aria-label="Row 10, slot 4" disabled></button>
+              </div>
+              <div class="row__feedback feedback" aria-label="Feedback for row 10">
+                <span class="feedback__key"></span>
+                <span class="feedback__key"></span>
+                <span class="feedback__key"></span>
+                <span class="feedback__key"></span>
+              </div>
+            </li>
+        </ol>
+      </section>
+
+      <p class="game__status" role="status" aria-live="polite">Pick a color to place your first peg.</p>
+
+      <!-- Color palette -->
+      <div class="palette" role="group" aria-label="Choose a color">
+        <button class="peg palette__color" type="button" data-color="red" aria-label="Red"></button>
+        <button class="peg palette__color" type="button" data-color="blue" aria-label="Blue"></button>
+        <button class="peg palette__color" type="button" data-color="green" aria-label="Green"></button>
+        <button class="peg palette__color" type="button" data-color="yellow" aria-label="Yellow"></button>
+        <button class="peg palette__color" type="button" data-color="purple" aria-label="Purple"></button>
+      </div>
+
+      <!-- Controls -->
+      <div class="controls">
+        <button class="btn btn--ghost" type="button" data-action="undo">Undo</button>
+        <button class="btn btn--primary" type="button" data-action="check" disabled>Check</button>
+      </div>
+    </div>
+
+      <!-- ===== PLAYER 2 ===== -->
+      <aside class="player player--right" data-player="2">
+        <div class="player__avatar">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm0 2c-4.42 0-8 2.24-8 5v1a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-1c0-2.76-3.58-5-8-5Z"/>
+          </svg>
+        </div>
+        <div class="player__info">
+          <p class="player__name">Player 2</p>
+          <p class="player__role">Codemaker</p>
+          <p class="player__score">Wins: <span class="player__score-value">0</span></p>
+        </div>
+      </aside>
+
+  </main>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer">
+    <p>Made with ☕ by <a class="footer__link" href="#">Alicja Wieczorek</a></p>
+  </footer>
+
+  <!-- ========== DIALOG: new game settings ========== -->
+  <dialog class="dialog" id="settings-dialog">
+    <form class="dialog__content" method="dialog">
+      <h2 class="dialog__title">New game</h2>
+      <p class="dialog__text">Who's playing?</p>
+
+      <label class="field">
+        <span class="field__label">Player 1 – Codebreaker</span>
+        <input class="field__input" type="text" name="player1" value="Player 1" maxlength="16" required>
+      </label>
+
+      <label class="field">
+        <span class="field__label">Player 2 – Codemaker</span>
+        <input class="field__input" type="text" name="player2" value="Player 2" maxlength="16" required>
+      </label>
+
+      <div class="dialog__actions">
+        <button class="btn btn--ghost" type="submit" value="cancel" formnovalidate>Cancel</button>
+        <button class="btn btn--primary" type="submit" value="start">Start game</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- ========== DIALOG: game result (win / game over) ========== -->
+  <dialog class="dialog" id="result-dialog">
+    <div class="dialog__content">
+      <span class="dialog__emoji" aria-hidden="true">🎉</span>
+      <h2 class="dialog__title">You cracked the code!</h2>
+      <p class="dialog__text">Solved in <strong>4</strong> tries.</p>
+      <div class="dialog__actions">
+        <button class="btn btn--primary" type="button" data-action="new-game">Play again</button>
+      </div>
+    </div>
+  </dialog>
+
+</body>
+</html>
